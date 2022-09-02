@@ -1,22 +1,29 @@
  
 #General info  
 
-Default browser to use in test is chrome. If no browser will be selected, chrome will be picked up. 
-TBD: add support for Safari
+Default browser to use in test is chrome. If no browser is selected, chrome will be picked up. 
+This framework uses WebDriver hub to execute the tests. Selenium provides docker standalone images for popular browsers like chrome, firefox, edge etc. Below steps are for a machine/VM (act as webdriver hub) with docker installed.
 
 # Firefox
-To change the version of the driver:   
-1. Download from https://github.com/mozilla/geckodriver/releases  
-2. Unzip and save under: src/main/resources/selenium/firefoxdriver
+To try firefox docker selenium container:   
+1. docker run -d -p 4446:4444 -p 5902:5900 --shm-size="2g" -e SCREEN_WIDTH=1920 -e SCREEN_HEIGHT=1080 -v /dev/shm:/dev/shm --name selenium_wd_chrome selenium/standalone-firefox 
+2. Set **wd_hub_url** in selenium.properties to http://*docker_host_IP*:4446/
 3. Pass "-Dbrowser=firefox" param for mvn, while test is executed  
+4. To view the firefox browser window of the container, use in your VNC client: *docker_host_IP*:5902
 
 # Chrome
-Chrome webdriver is downloaded, unzipped and set in params automatically.  
-To change the version of chrome webdriver:   
- 1. Update: src/main/resources/selenium.properties  
- 2. Set: chomeDriverVersion = VERSION  
- 3. Pass "-Dbrowser=chrome" param for mvn, while test is executed
- 
- List of version to update available on official website: https://sites.google.com/a/chromium.org/chromedriver/downloads
+To try chrome docker selenium container:   
+1. docker run -d -p 4444:4444 -p 5900:5900 --shm-size="2g" -e SCREEN_WIDTH=1920 -e SCREEN_HEIGHT=1080 -v /dev/shm:/dev/shm --name selenium_wd_chrome selenium/standalone-chrome 
+2. Set **wd_hub_url** in selenium.properties to http://*docker_host_IP*:4444/
+3. Pass "-Dbrowser=chrome" param for mvn, while test is executed  
+4. To view the chrome browser window of the container, use in your VNC client: *docker_host_IP*:5900
+
+# Edge
+To try edge docker selenium container:   
+1. docker run -d -p 4445:4444 -p 5901:5900 --shm-size="2g" -e SCREEN_WIDTH=1920 -e SCREEN_HEIGHT=1080 -v /dev/shm:/dev/shm --name selenium_wd_chrome selenium/standalone-edge 
+2. Set **wd_hub_url** in selenium.properties to http://*docker_host_IP*:4445/
+3. Pass "-Dbrowser=edge" param for mvn, while test is executed  
+4. To view the edge browser window of the container, use in your VNC client: *docker_host_IP*:5901
 
 
+For more info on the selenium docker project, checkout [docker-selenium github](https://github.com/SeleniumHQ/docker-selenium)

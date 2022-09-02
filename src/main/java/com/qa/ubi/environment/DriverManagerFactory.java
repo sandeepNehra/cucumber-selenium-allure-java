@@ -1,18 +1,10 @@
 package com.qa.ubi.environment;
 
-import com.qa.ubi.methods.InitSystemProperties;
-
 public class DriverManagerFactory {
 
-	static WebDriverSetup chromeSetup = new WebDriverSetup();
-	static InitSystemProperties initSystemProperties = new InitSystemProperties();
-
-	static // get browser type from user selection
-	String browserName = System.getProperty("browser", "chrome");
+	static String browserName = System.getProperty("browser", "chrome");
 
 	public static DriverManager getManager(DriverType type) {
-
-		initChrome();
 
 		DriverManager driverManager;
 
@@ -31,7 +23,6 @@ public class DriverManagerFactory {
 	}
 
 	public static DriverManager getManagerByUserSelection() {
-		initChrome();
 		DriverManager driverManager;
 
 		switch (browserName) {
@@ -46,15 +37,5 @@ public class DriverManagerFactory {
 			break;
 		}
 		return driverManager;
-	}
-
-	public static void initChrome() {
-		// download and setup chrome driver as default
-		chromeSetup.downloadChromeDriver();
-		chromeSetup.unZipIt();
-		chromeSetup.makeWebDriverExecutable();
-
-		// set system vars for webdriver
-		initSystemProperties.setWebdriverSystemProperty();
 	}
 }

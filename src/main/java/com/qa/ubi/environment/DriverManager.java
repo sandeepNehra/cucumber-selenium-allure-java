@@ -5,23 +5,19 @@ import org.openqa.selenium.WebDriver;
 public abstract class DriverManager {
 
     protected WebDriver driver;
-    protected abstract void startService();
-    protected abstract void stopService();
-    protected abstract void createDriver();
+    protected abstract void createDriver(String webdriverHubURL);
 
     public void quitDriver() { 	
         if (driver!=null) {
             driver.quit();
-            stopService();
             driver = null;
         }
 
     }
 
-    public WebDriver getDriver() {
+    public WebDriver getDriver(String webdriverHubURL) {
         if (driver == null) {
-            startService();
-            createDriver();
+            createDriver(webdriverHubURL);
         }
         return driver;
     }

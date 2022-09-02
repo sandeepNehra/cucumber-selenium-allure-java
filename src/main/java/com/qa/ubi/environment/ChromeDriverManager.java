@@ -1,47 +1,21 @@
 package com.qa.ubi.environment;
 
-import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.qa.ubi.logger.Log;
 
 public class ChromeDriverManager extends DriverManager {
 
-	WebDriverSetup chromeDriverSetup = new WebDriverSetup();
-
-	private ChromeDriverService chService;
+	URL wd_url = null;
 
 	@Override
-	public void startService() {
-		if (null == chService) {
-			try {
-				chService = new ChromeDriverService.Builder()
-						.usingDriverExecutable(new File(chromeDriverSetup.getChromeDriverPath())).usingAnyFreePort()
-						.build();
-				chService.start();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	@Override
-	public void stopService() {
-		if (null != chService && chService.isRunning())
-			chService.stop();
-	}
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public void createDriver() {
-		DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-
+	public void createDriver(String webdriverHubURL) {
 		Map<String, String> mobileEmulation = new HashMap<>();
 		mobileEmulation.put("deviceName", "iPhone X");
 
@@ -56,8 +30,15 @@ public class ChromeDriverManager extends DriverManager {
 		options.addArguments("--start-maximized");
         options.addArguments("disable-infobars");
         options.setAcceptInsecureCerts(true);
-		capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-		driver = new ChromeDriver(chService, capabilities);
+
+        try {
+			wd_url = new URL(webdriverHubURL);
+		} catch (MalformedURLException e) {
+			Log.ERROR("Unable to create URL from webdriver hub parameter" + e.getMessage());
+			e.printStackTrace();
+		}
+		
+        driver = new RemoteWebDriver(wd_url, options);
 	}
     
     public boolean getPlatform() {

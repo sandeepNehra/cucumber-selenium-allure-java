@@ -46,9 +46,6 @@ public class BrowserUtils extends SelectElementByType implements BaseTest {
 	private WebElement dropdown = null;
 	private Select selectList = null;
 	
-	// initial web driver hardcoded
-	//DriverManager driverManager = DriverManagerFactory.getManager(DriverType.FIREFOX);
-	
 	//initial web driver by user selection 
 	DriverManager driverManager = DriverManagerFactory.getManagerByUserSelection();
 	
@@ -58,9 +55,6 @@ public class BrowserUtils extends SelectElementByType implements BaseTest {
 	WebDriverWait wait;
 	
 	
-	
-	
-
 	////////////////////
 	// NAVIGATION METHODS
 	////////////////////
@@ -74,7 +68,7 @@ public class BrowserUtils extends SelectElementByType implements BaseTest {
 
 	public void navigateTo(String url) {
 		
-		driver = driverManager.getDriver();
+		driver = driverManager.getDriver(props.getSeleniumProperty("wd_hub_url"));
 		wait = new WebDriverWait(driver, 10);
 
 		// get url from feature file

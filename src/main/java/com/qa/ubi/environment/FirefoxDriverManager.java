@@ -1,37 +1,32 @@
 package com.qa.ubi.environment;
 
-import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.GeckoDriverService;
+import org.openqa.selenium.Platform;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+
+import com.qa.ubi.logger.Log;
 
 public class FirefoxDriverManager extends DriverManager {
-
-	private GeckoDriverService ffService;
-	WebDriverSetup webDriverSetup = new WebDriverSetup();
+	
+	URL wd_url = null;
 
 	@Override
-	public void startService() {
-		if (null == ffService) {
-			try {
-				ffService = new GeckoDriverService.Builder()
-						.usingDriverExecutable(new File(webDriverSetup.getfirefoxDriverPath())).usingAnyFreePort()
-						.build();
-				ffService.start();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+	public void createDriver(String webdriverHubURL) {
+		DesiredCapabilities cap = DesiredCapabilities.firefox();
+        // adding capabilities to the firefox browser
+        cap.setCapability("acceptInsecureCerts",true);
+        cap.setBrowserName("firefox");
+        cap.setPlatform(Platform.WINDOWS);
+        
+        try {
+			wd_url = new URL(webdriverHubURL);
+		} catch (MalformedURLException e) {
+			Log.ERROR("Unable to create URL from webdriver hub parameter" + e.getMessage());
 		}
-	}
-
-	@Override
-	public void stopService() {
-		if (null != ffService && ffService.isRunning())
-			ffService.stop();
-	}
-
-	@Override
-	public void createDriver() {
-		driver = new FirefoxDriver();
+        
+        driver = new RemoteWebDriver(wd_url, cap);
 	}
 }
